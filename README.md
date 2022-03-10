@@ -1,15 +1,14 @@
 # vdaspect
 
-- [vdaspect](#vdaspect)
-  - [Introduction](#introduction)
-  - [Functionality](#functionality)
-  - [API](#api)
-    - [Classes](#classes)
-    - [Important Properties and Methods](#important-properties-and-methods)
-  - [FAQ and Troubleshooting](#faq-and-troubleshooting)
-  - [Glosar](#glosar)
-  - [Roadmap](#roadmap)
-  - [Deprecated Todos](#deprecated-todos)
+- [Introduction](#introduction)
+- [Functionality](#functionality)
+- [API](#api)
+- [Classes](#classes)
+- [Important Properties and Methods](#important-properties-and-methods)
+- [FAQ and Troubleshooting](#faq-and-troubleshooting)
+- [Glossar](#glossar)
+- [Roadmap](#roadmap)
+- [Deprecated Todos](#deprecated-todos)
 
 ## Introduction
 
@@ -49,18 +48,16 @@ Unteraspekte müssen geupdatet werden - entweder über Verweise oder über Signa
 * `VDAspectRef`
 * `EditorPlugin`
 
-### Important Properties and Methods
-
+### Properties and Methods
 
 ## FAQ and Troubleshooting
 
-## Glosar
+## Glossar
 
 ## Roadmap
 
-* [ ] TODOs auflisten
 * [ ] Functionality
-* [ ] ???
+* [ ] Wiki
 
 ## Deprecated Todos
 * Eventuell kann ein Aspekt auch einen Anderen überschreiben welche regeln sollte es dann geben? Oder ehr nicht?

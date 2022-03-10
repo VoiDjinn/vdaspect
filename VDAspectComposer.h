@@ -38,7 +38,6 @@ class VDAspectComposer : public Resource {
 
     void set_aspects(List< Ref<VDAspect> > aspects);
     List< Ref<VDAspect> > get_aspects() const;
-
 };
 
 #endif

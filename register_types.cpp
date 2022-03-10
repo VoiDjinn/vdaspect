@@ -17,5 +17,8 @@ void register_vdaspect_types() {
   ClassDB::register_class<VDEntityNode>();
 }
 
-void unregister_vdaspect_types() {
+void unregister_vdaspect_types() {}
+
+void register_vdaspect_singletons() {
+    Engine::get_singleton()->add_singleton(Engine::Singleton("VDAspectGlobal", VDAspectGlobal::get_singleton()));
 }

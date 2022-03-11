@@ -22,67 +22,63 @@ void VDAspectData::_bind_methods()
 
 }
 
-Ref<VDAspect> VDAspectData::get_active()
-{
+Ref<VDAspect> VDAspectData::get_active() {
   Ref<VDAspect> result;
-  if (active_index >= 0)
+  if (active_index >= 0) {
     result = get_aspect(active_index);
+  }
   return result;
 }
 
-Ref<VDAspect> VDAspectData::get_aspect(int index)
-{
+Ref<VDAspect> VDAspectData::get_aspect(int index) {
   return get_node(index)->get_aspect();
 }
 
-int VDAspectData::get_aspect_size()
-{
+int VDAspectData::get_aspect_size() {
   return nodes.size();
 }
 
-void VDAspectData::set_active_index(int index)
-{
-  if (index < 0)
+void VDAspectData::set_active_index(int index) {
+  if (index < 0) {
     ERR_PRINT("new active index < 0");
-  if (index >= get_aspect_size())
+  }
+  if (index >= get_aspect_size()) {
     ERR_PRINT("new active index out of bounds");
-  else
+  } else {
     active_index = index;
+  }
 }
 
-int VDAspectData::get_active_index()
-{
+int VDAspectData::get_active_index() {
   return active_index;
 }
 
-Ref<VDAspectNode> VDAspectData::get_node(int index)
-{
+Ref<VDAspectNode> VDAspectData::get_node(int index) {
   return nodes[index];
 }
 
-void VDAspectData::add(Ref<VDAspectNode> node)
-{
+void VDAspectData::add(Ref<VDAspectNode> node) {
   nodes.push_back(node);
-  if (active_index == -1 && nodes.size() > 0)
+  if (active_index == -1 && nodes.size() > 0) {
     active_index = 0;
+  }
 }
 
-bool VDAspectData::remove(Ref<VDAspectNode> node)
-{
+bool VDAspectData::remove(Ref<VDAspectNode> node) {
   int index = nodes.find(node);
-  if (index >= 0)
-  {
+  if (index >= 0) {
     nodes.remove(index);
-    if (index <= active_index)
+    if (index <= active_index) {
       active_index-=1;
-    if (active_index == -1 && nodes.size() > 0)
+    }
+    if (active_index == -1 && nodes.size() > 0) {
       active_index = 0;
+    }
     return true;
   }
   else return false;
 }
 
-bool VDAspectData::is_data_valid()
-{
+bool VDAspectData::is_data_valid() {
   return active_index > -1;
 }

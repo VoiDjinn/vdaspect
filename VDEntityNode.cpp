@@ -3,6 +3,7 @@
 
 VDEntityNode::VDEntityNode() {
   entity_node = NULL;
+  set_name("Entity");
 }
 
 void VDEntityNode::_bind_methods() {

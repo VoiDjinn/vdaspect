@@ -17,8 +17,8 @@ class VDAspectComposer : public Resource {
     HashMap< StringName, Ref<VDAspectData> > aspects;
     List< Ref<VDAspect> > aspect_order;
 
-    void reg(Ref<VDAspectNode> node);
-    void unreg(Ref<VDAspectNode> node);
+    void reg_node(Ref<VDAspectNode> node);
+    void unreg_node(Ref<VDAspectNode> node);
 
 	protected:
 		static void _bind_methods();
@@ -26,11 +26,11 @@ class VDAspectComposer : public Resource {
 	public:
     VDAspectComposer();
 
-    bool add(Ref<VDAspect> aspect);
-    bool remove(Ref<VDAspect> aspect);
+    bool add_aspect(Ref<VDAspect> aspect);
+    bool remove_aspect(Ref<VDAspect> aspect);
 
-    bool has(StringName name);
-    Ref<VDAspect> get(StringName name);
+    bool has_aspect(StringName name);
+    Ref<VDAspect> get_aspect(StringName name);
     Ref<VDAspectData> get_data(StringName name);
 
     void set_aspects_open(Array aspects);
@@ -38,6 +38,7 @@ class VDAspectComposer : public Resource {
 
     void set_aspects(List< Ref<VDAspect> > aspects);
     List< Ref<VDAspect> > get_aspects() const;
+
 };
 
 #endif

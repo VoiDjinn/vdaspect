@@ -8,8 +8,8 @@ class VDEntityNode : public Node {
   GDCLASS(VDEntityNode, Node);
 
   Ref<VDAspectComposer> composer;
-  Node* entity_node;
-  NodePath entity_path;
+  Node* tagged_node;
+  NodePath tagged_node_path;
 
   void reregister(Node* new_entity);
   void recheck();
@@ -31,10 +31,9 @@ class VDEntityNode : public Node {
     Ref<VDAspect> get_aspect(StringName name);
     Ref<VDAspectData> get_data(StringName name);
 
-    void set_entity_path(NodePath path);
-    NodePath get_entity_path();
-    Node* get_entity_node();
-
+    void set_tagged_node_path(NodePath path);
+    NodePath get_tagged_node_path();
+    Node* get_tagged_node();
 };
 
 #endif

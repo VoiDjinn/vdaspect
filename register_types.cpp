@@ -15,11 +15,11 @@ void register_vdaspect_types() {
   ClassDB::register_class<VDAspectNode>();
   ClassDB::register_class<VDAspectData>();
   ClassDB::register_class<VDAspectComposer>();
+  ClassDB::register_class<VDEntity>();
   ClassDB::register_class<VDEntityNode>();
+  Engine::get_singleton()->add_singleton(Engine::Singleton("VDEntity", memnew(VDEntity)));
+  //Engine::get_singleton()->add_singleton(Engine::Singleton("VDEntity", VDEntity::get_singleton()));
 }
 
 void unregister_vdaspect_types() {}
 
-void register_vdaspect_singletons() {
-    Engine::get_singleton()->add_singleton(Engine::Singleton("VDEntity", VDEntity::get_singleton()));
-}

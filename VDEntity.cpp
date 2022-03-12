@@ -13,13 +13,14 @@ void VDEntity::_bind_methods() {
   ClassDB::bind_method(D_METHOD("get_composer", "node"),                &VDEntity::get_composer);
   ClassDB::bind_method(D_METHOD("get_entity",   "node"),                &VDEntity::get_entity);
   ClassDB::bind_method(D_METHOD("is_entity",    "node"),                &VDEntity::is_entity);
+  //ClassDB::bind_method(D_METHOD("get_entities_with", "aspect_name"),                &VDEntity::get_entities_with);
 }
 
 bool VDEntity::register_entity(VDEntityNode* entity, Node* node) {
   ERR_FAIL_COND_V_MSG(entity == nullptr, false, "Entity is null.");
   Node* registering_node = nullptr;
-  if (node == nullptr) {
-    registering_node = entity->get_entity_node();
+  if(node == nullptr) {
+    registering_node = entity->get_tagged_node();
   } else {
     registering_node = node;
   }
@@ -32,15 +33,16 @@ bool VDEntity::register_entity(VDEntityNode* entity, Node* node) {
 
 bool VDEntity::unregister_entity(VDEntityNode* entity) {
   ERR_FAIL_COND_V_MSG(entity == nullptr, false, "Entity is null.");
-  if (is_entity(entity)) {
-    return registered_nodes.erase(entity->get_instance_id());
+  Node* tagged_node = entity->get_tagged_node();
+  if(tagged_node != nullptr && registered_nodes.has(tagged_node->get_instance_id())) {
+    return registered_nodes.erase(tagged_node->get_instance_id());
   }
   return false;
 }
 
 Ref<VDAspect> VDEntity::get_aspect(Node* node, StringName aspect_name) {
   Ref<VDAspectComposer> composer = get_composer(node);
-  if (composer.is_valid()) {
+  if(composer.is_valid()) {
     return composer->get_aspect(aspect_name);
   }
   return nullptr;
@@ -48,7 +50,7 @@ Ref<VDAspect> VDEntity::get_aspect(Node* node, StringName aspect_name) {
 
 Ref<VDAspectComposer> VDEntity::get_composer(Node* node) {
   VDEntityNode* entity_node = get_entity(node);
-  if (entity_node != nullptr) {
+  if(entity_node != nullptr) {
     return entity_node->get_composer();
   }
   return nullptr;
@@ -56,7 +58,7 @@ Ref<VDAspectComposer> VDEntity::get_composer(Node* node) {
 
 VDEntityNode* VDEntity::get_entity(Node* node) {
   ERR_FAIL_COND_V_MSG(node == nullptr, nullptr, "Node is null.");
-  if (registered_nodes.has(node->get_instance_id())) {
+  if(registered_nodes.has(node->get_instance_id())) {
     Object* entity_instance = ObjectDB::get_instance(registered_nodes.get(node->get_instance_id()));
     ERR_FAIL_COND_V_MSG(entity_instance == nullptr, nullptr, "Entity-instance is null.");
     VDEntityNode* entity_node = Object::cast_to<VDEntityNode>(entity_instance);
@@ -67,7 +69,7 @@ VDEntityNode* VDEntity::get_entity(Node* node) {
 }
 
 bool VDEntity::is_entity(Node* node) {
-  if (node == nullptr) {
+  if(node == nullptr) {
     return false;
   }
   return registered_nodes.has(node->get_instance_id());
@@ -78,9 +80,9 @@ List<Node*> VDEntity::get_entities_with(StringName aspect_name) {
   int size = registered_nodes.size();
   const HashMap<ObjectID, ObjectID>::Pair* pairs = new HashMap<ObjectID, ObjectID>::Pair[size];
   registered_nodes.get_key_value_ptr_array(&pairs);
-  for (int i = 0; i < size; i++) {
+  for(int i = 0; i < size; i++) {
     Ref<VDAspectComposer> composer = Object::cast_to<VDEntityNode>(ObjectDB::get_instance(pairs[i].data))->get_composer();
-    if (composer != nullptr && composer->has_aspect(aspect_name)) {
+    if(composer != nullptr && composer->has_aspect(aspect_name)) {
       results.push_back(Object::cast_to<Node>(ObjectDB::get_instance(pairs[i].key)));
     }
   }

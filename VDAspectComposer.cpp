@@ -17,8 +17,8 @@ void VDAspectComposer::_bind_methods() {
 
   ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "aspects", PROPERTY_HINT_TYPE_STRING, "17/17:VDAspect"), "set_aspects", "get_aspects");
 
-  //ADD_SIGNAL(MethodInfo("aspects_added"));
-  //ADD_SIGNAL(MethodInfo("aspects_removed"));
+  ADD_SIGNAL(MethodInfo("aspect_added", PropertyInfo(Variant::OBJECT, "added_aspect", PROPERTY_HINT_RESOURCE_TYPE, "VDAspect")));
+  ADD_SIGNAL(MethodInfo("aspect_removed", PropertyInfo(Variant::OBJECT, "removed_aspect", PROPERTY_HINT_RESOURCE_TYPE, "VDAspect")));
   ADD_SIGNAL(MethodInfo("aspects_changed"));
 }
 
@@ -67,7 +67,7 @@ bool VDAspectComposer::add_aspect(Ref<VDAspect> aspect) {
     roots.set(aspect, node);
     aspect_order.push_back(aspect);
     reg_node(node);
-    //emit_signal("aspects_added");
+    emit_signal("aspect_added", aspect);
     //property_list_changed_notify();
     return true;
   }
@@ -80,7 +80,7 @@ bool VDAspectComposer::remove_aspect(Ref<VDAspect> aspect) {
     unreg_node(node);
     aspect_order.erase(aspect);
     roots.erase(aspect);
-    //emit_signal("aspects_removed");
+    emit_signal("aspect_removed", aspect);
     //property_list_changed_notify();
     return true;
   }
@@ -101,12 +101,15 @@ Ref<VDAspect> VDAspectComposer::get_aspect(StringName name) const {
 }
 
 Ref<VDAspectData> VDAspectComposer::get_data(StringName name) const {
-  return aspects.get(name);
+  Ref<VDAspectData> data;
+  if(aspects.has(name)){
+    data = aspects.get(name); // TODO: issue for get_default or get_or_null_ref
+  }
+  return data;
 }
 
 void VDAspectComposer::set_aspects_open(Array aspects) {
   List< Ref<VDAspect> > new_aspects;
-  // print_line("size "+itos(aspects.size()));
   for(int i = 0; i < aspects.size(); i++) {
     Ref<VDAspect> aspect = aspects[i];
     if(aspect.is_null()) {
@@ -130,29 +133,21 @@ void VDAspectComposer::set_aspects(List< Ref<VDAspect> > aspects) {
   //List< Ref<VDAspect> > old_aspects = get_aspects();
   int added = 0;
   int removed = 0;
-  print_line("huhu add");
   for (const List< Ref<VDAspect> >::Element* ele = aspects.front(); ele; ele = ele->next()) {
     Ref<VDAspect> new_aspect = ele->get();
-    print_line("add 1");
     if (!roots.has(new_aspect)) {
-      print_line("add 2");
       add_aspect(new_aspect);
       added++;
     }
   }
-  print_line("huhu "+itos(aspects.size())+" "+itos(aspect_order.size()));
-  print_line("huhu remove");
   for (const List< Ref<VDAspect> >::Element* ele = aspect_order.front(); ele; ele = ele->next()) {
     Ref<VDAspect> old_aspect = ele->get();
-    print_line("remove 1");
     if(aspects.find(old_aspect) == nullptr) {
-      print_line("remove 2");
       remove_aspect(old_aspect);
       removed++;
     }
   }
   if(removed > 0 || added > 0) {
-    print_line("huhu "+itos(aspects.size())+" "+itos(aspect_order.size()));
     emit_signal("aspects_changed");
     property_list_changed_notify();
   }

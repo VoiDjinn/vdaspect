@@ -1,6 +1,8 @@
 #include "VDAspectData.h"
 
-VDAspectData::VDAspectData() {}
+VDAspectData::VDAspectData() {
+  active_index = -1;
+}
 
 void VDAspectData::_bind_methods()
 {
@@ -31,7 +33,7 @@ bool VDAspectData::remove_node(Ref<VDAspectNode> node) {
   if (index >= 0) {
     nodes.remove(index);
     if (index <= active_index) {
-      active_index-=1;
+      active_index--;
     }
     if (active_index == -1 && nodes.size() > 0) {
       active_index = 0;

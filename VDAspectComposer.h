@@ -17,8 +17,8 @@ class VDAspectComposer : public Resource {
     HashMap< StringName, Ref<VDAspectData> > aspects;
     List< Ref<VDAspect> > aspect_order;
 
-    void reg(Ref<VDAspectNode> node);
-    void unreg(Ref<VDAspectNode> node);
+    void reg_node(Ref<VDAspectNode> node);
+    void unreg_node(Ref<VDAspectNode> node);
 
 	protected:
 		static void _bind_methods();
@@ -26,18 +26,45 @@ class VDAspectComposer : public Resource {
 	public:
     VDAspectComposer();
 
-    bool add(Ref<VDAspect> aspect);
-    bool remove(Ref<VDAspect> aspect);
+    bool add_aspect(Ref<VDAspect> aspect);
+    bool remove_aspect(Ref<VDAspect> aspect);
 
-    bool has(StringName name);
-    Ref<VDAspect> get(StringName name);
-    Ref<VDAspectData> get_data(StringName name);
+    bool has_aspect(StringName name);
+    Ref<VDAspect> get_aspect(StringName name) const;
+    Ref<VDAspectData> get_data(StringName name) const;
 
     void set_aspects_open(Array aspects);
     Array get_aspects_open() const;
 
     void set_aspects(List< Ref<VDAspect> > aspects);
     List< Ref<VDAspect> > get_aspects() const;
+
+  public:
+    template<class T>
+    _FORCE_INLINE_ void add(Ref<T> ref) {
+        add_aspect(Object::cast_to<VDAspect>(ref.ptr()));
+    }
+
+    template<class T>
+    _FORCE_INLINE_ Ref<T> remove() {
+      return Object::cast_to<T>(remove_aspect(T::get_class_static()));
+    }
+
+    template<class T>
+    _FORCE_INLINE_ bool has() const {
+        return has_aspect(T::get_class_static());
+    }
+
+    template<class T>
+    _FORCE_INLINE_ Ref<T> get() const {
+        return get_aspect(T::get_class_static());
+    }
+
+    template<class T>
+    _FORCE_INLINE_ operator T*() const {
+        return *get_aspect(T::get_class_static());
+    }
+
 };
 
 #endif

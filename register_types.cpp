@@ -7,6 +7,7 @@
 #include "VDAspectData.h"
 #include "VDAspectComposer.h"
 #include "VDEntityNode.h"
+#include "VDEntity.h"
 
 void register_vdaspect_types() {
 //  ClassDB::register_virtual_class<VDAspect>();
@@ -20,5 +21,5 @@ void register_vdaspect_types() {
 void unregister_vdaspect_types() {}
 
 void register_vdaspect_singletons() {
-    Engine::get_singleton()->add_singleton(Engine::Singleton("VDAspectGlobal", VDAspectGlobal::get_singleton()));
+    Engine::get_singleton()->add_singleton(Engine::Singleton("VDEntity", VDEntity::get_singleton()));
 }

@@ -28,15 +28,15 @@ class VDAspectNode : public Resource {
 
     void init(Ref<VDAspect> aspect);
 
-    Ref<VDAspect> get_aspect();
+    Ref<VDAspect> get_aspect() const;
 
-    Ref<VDAspectNode> get_parent();
+    Ref<VDAspectNode> get_parent() const;
 
-    Ref<VDAspectNode> get_child(int index);
+    Ref<VDAspectNode> get_child(int index) const;
 
-    int get_child_size();
+    int get_child_size() const;
 
-    List<StringName> get_classes();
+    List<StringName> get_classes() const;
 
 };
 

@@ -33,7 +33,7 @@ void VDAspectComposer::reg_node(Ref<VDAspectNode> node) {
       data = Ref<VDAspectData>(memnew(VDAspectData));
       aspects.set(name, data);
     }
-    data->add(node);
+    data->add_node(node);
   }
   for (int i = 0; i < node->get_child_size(); i++) {
     reg_node(node->get_child(i));
@@ -46,7 +46,7 @@ void VDAspectComposer::unreg_node(Ref<VDAspectNode> node) {
     StringName name = ele->get();
     if (aspects.has(name)) {
       Ref<VDAspectData> data = aspects.get(name);
-      data->remove(node);
+      data->remove_node(node);
       if (data->get_aspect_size() == 0) {
         aspects.erase(name);
       }
@@ -91,7 +91,7 @@ bool VDAspectComposer::has_aspect(StringName name) {
   return aspects.has(name);
 }
 
-Ref<VDAspect> VDAspectComposer::get_aspect(StringName name) {
+Ref<VDAspect> VDAspectComposer::get_aspect(StringName name) const {
   Ref<VDAspectData> data = get_data(name);
   if (data.is_valid()) {
     return data->get_active();
@@ -100,7 +100,7 @@ Ref<VDAspect> VDAspectComposer::get_aspect(StringName name) {
   }
 }
 
-Ref<VDAspectData> VDAspectComposer::get_data(StringName name) {
+Ref<VDAspectData> VDAspectComposer::get_data(StringName name) const {
   return aspects.get(name);
 }
 

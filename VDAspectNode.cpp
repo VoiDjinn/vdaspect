@@ -72,22 +72,22 @@ String VDAspectNode::collect_classes(StringName class_name, List<StringName>& cl
   }
 }
 
-Ref<VDAspect> VDAspectNode::get_aspect() {
+Ref<VDAspect> VDAspectNode::get_aspect() const {
   return aspect;
 }
 
-Ref<VDAspectNode> VDAspectNode::get_parent() {
+Ref<VDAspectNode> VDAspectNode::get_parent() const {
   return parent;
 }
 
-Ref<VDAspectNode> VDAspectNode::get_child(int index) {
+Ref<VDAspectNode> VDAspectNode::get_child(int index) const {
   return childs[index];
 }
 
-int VDAspectNode::get_child_size() {
+int VDAspectNode::get_child_size() const {
   return childs.size();
 }
 
-List<StringName> VDAspectNode::get_classes() {
+List<StringName> VDAspectNode::get_classes() const {
   return classes;
 }

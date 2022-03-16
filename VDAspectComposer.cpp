@@ -27,11 +27,9 @@ void VDAspectComposer::reg_node(Ref<VDAspectNode> node) {
   for (List<StringName>::Element* ele = classes.front(); ele; ele = ele->next()) {
     StringName name = ele->get();
     Ref<VDAspectData> data;
-    if (aspects.has(name)) {
-      data = aspects.get(name);
-    } else {
+    if (!aspects.lookup(name, data)) {
       data = Ref<VDAspectData>(memnew(VDAspectData));
-      aspects.set(name, data);
+      aspects.insert(name, data);
     }
     data->add_node(node);
   }
@@ -44,11 +42,11 @@ void VDAspectComposer::unreg_node(Ref<VDAspectNode> node) {
   List<StringName> classes = node->get_classes();
   for (List<StringName>::Element* ele = classes.front(); ele; ele = ele->next()) {
     StringName name = ele->get();
-    if (aspects.has(name)) {
-      Ref<VDAspectData> data = aspects.get(name);
+    Ref<VDAspectData> data;
+    if (aspects.lookup(name, data)) {
       data->remove_node(node);
       if (data->get_aspect_size() == 0) {
-        aspects.erase(name);
+        aspects.remove(name);
       }
     } else {
       WARN_PRINT("aspects invalid");
@@ -75,11 +73,11 @@ bool VDAspectComposer::add_aspect(Ref<VDAspect> aspect) {
 }
 
 bool VDAspectComposer::remove_aspect(Ref<VDAspect> aspect) {
-  Ref<VDAspectNode> node = roots.get(aspect);
-  if (node.is_valid()) {
+  Ref<VDAspectNode> node;
+  if (roots.lookup(aspect, node)) {
     unreg_node(node);
     aspect_order.erase(aspect);
-    roots.erase(aspect);
+    roots.remove(aspect);
     emit_signal("aspect_removed", aspect);
     //property_list_changed_notify();
     return true;
@@ -102,9 +100,7 @@ Ref<VDAspect> VDAspectComposer::get_aspect(StringName name) const {
 
 Ref<VDAspectData> VDAspectComposer::get_data(StringName name) const {
   Ref<VDAspectData> data;
-  if(aspects.has(name)){
-    data = aspects.get(name); // TODO: issue for get_default or get_or_null_ref
-  }
+  aspects.lookup(name,data);
   return data;
 }
 
@@ -154,8 +150,5 @@ void VDAspectComposer::set_aspects(List< Ref<VDAspect> > aspects) {
 }
 
 List< Ref<VDAspect> > VDAspectComposer::get_aspects() const {
-//  List< Ref<VDAspect> > keys;
-//  roots.get_key_list(&keys);
-//  return keys;
   return aspect_order;
 }

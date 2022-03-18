@@ -35,7 +35,8 @@ bool VDEntity::unregister_entity(VDEntityNode* entity) {
   ERR_FAIL_COND_V_MSG(entity == nullptr, false, "Entity is null.");
   Node* tagged_node = entity->get_tagged_node();
   if(tagged_node != nullptr && registered_nodes.has(tagged_node->get_instance_id())) {
-    return registered_nodes.erase(tagged_node->get_instance_id());
+    registered_nodes.remove(tagged_node->get_instance_id());
+    return true;
   }
   return false;
 }
@@ -58,8 +59,9 @@ Ref<VDAspectComposer> VDEntity::get_composer(Node* node) {
 
 VDEntityNode* VDEntity::get_entity(Node* node) {
   ERR_FAIL_COND_V_MSG(node == nullptr, nullptr, "Node is null.");
-  if(registered_nodes.has(node->get_instance_id())) {
-    Object* entity_instance = ObjectDB::get_instance(registered_nodes.get(node->get_instance_id()));
+  ObjectID id;
+  if(registered_nodes.lookup(node->get_instance_id(), id)) {
+    Object* entity_instance = ObjectDB::get_instance(id);
     ERR_FAIL_COND_V_MSG(entity_instance == nullptr, nullptr, "Entity-instance is null.");
     VDEntityNode* entity_node = Object::cast_to<VDEntityNode>(entity_instance);
     ERR_FAIL_COND_V_MSG(entity_node == nullptr, nullptr, "Instance is not convertible to VDEntityNode.");
@@ -77,15 +79,22 @@ bool VDEntity::is_entity(Node* node) {
 
 List<Node*> VDEntity::get_entities_with(StringName aspect_name) {
   List<Node*> results;
-  int size = registered_nodes.size();
-  const HashMap<ObjectID, ObjectID>::Pair* pairs = new HashMap<ObjectID, ObjectID>::Pair[size];
-  registered_nodes.get_key_value_ptr_array(&pairs);
-  for(int i = 0; i < size; i++) {
-    Ref<VDAspectComposer> composer = Object::cast_to<VDEntityNode>(ObjectDB::get_instance(pairs[i].data))->get_composer();
+  for (OAHashMap<ObjectID, ObjectID>::Iterator it = registered_nodes.iter(); it.valid; registered_nodes.next_iter(it) ) {
+    Ref<VDAspectComposer> composer = Object::cast_to<VDEntityNode>(ObjectDB::get_instance(*(it.value)))->get_composer();
     if(composer != nullptr && composer->has_aspect(aspect_name)) {
-      results.push_back(Object::cast_to<Node>(ObjectDB::get_instance(pairs[i].key)));
+      results.push_back(Object::cast_to<Node>(ObjectDB::get_instance(*(it.key))));
     }
   }
-  delete pairs;
+
+  // int size = registered_nodes.size();
+  // const HashMap<ObjectID, ObjectID>::Pair* pairs = new HashMap<ObjectID, ObjectID>::Pair[size];
+  // registered_nodes.get_key_value_ptr_array(&pairs);
+  // for(int i = 0; i < size; i++) {
+  //   Ref<VDAspectComposer> composer = Object::cast_to<VDEntityNode>(ObjectDB::get_instance(pairs[i].data))->get_composer();
+  //   if(composer != nullptr && composer->has_aspect(aspect_name)) {
+  //     results.push_back(Object::cast_to<Node>(ObjectDB::get_instance(pairs[i].key)));
+  //   }
+  // }
+  // delete pairs;
   return results;
 }

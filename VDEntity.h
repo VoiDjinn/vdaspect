@@ -1,6 +1,8 @@
 #ifndef VDENTITY_H
 #define VDENTITY_H
 
+#include "core/oa_hash_map.h"
+
 #include "VDAspectComposer.h"
 #include "VDEntityNode.h"
 
@@ -11,7 +13,7 @@ class VDEntity : public Object {
 
   static VDEntity *singleton;
 
-  HashMap<ObjectID, ObjectID> registered_nodes;
+  OAHashMap<ObjectID, ObjectID> registered_nodes;
 protected:
   static void _bind_methods();
 

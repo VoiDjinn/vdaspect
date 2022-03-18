@@ -2,6 +2,7 @@
 #define VDASPECT_COMPOSER_H
 
 #include "core/resource.h"
+#include "core/oa_hash_map.h"
 #include "core/script_language.h"
 
 #include "modules/gdscript/gdscript.h"
@@ -13,8 +14,8 @@
 class VDAspectComposer : public Resource {
   GDCLASS(VDAspectComposer, Resource);
 
-    HashMap< Ref<VDAspect>, Ref<VDAspectNode>, VariantHasher, VariantComparator > roots;
-    HashMap< StringName, Ref<VDAspectData> > aspects;
+    OAHashMap< Ref<VDAspect>, Ref<VDAspectNode>, VariantHasher, VariantComparator > roots;
+    OAHashMap< StringName, Ref<VDAspectData> > aspects;
     List< Ref<VDAspect> > aspect_order;
 
     void reg_node(Ref<VDAspectNode> node);

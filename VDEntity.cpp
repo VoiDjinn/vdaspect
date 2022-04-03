@@ -85,16 +85,5 @@ List<Node*> VDEntity::get_entities_with(StringName aspect_name) {
       results.push_back(Object::cast_to<Node>(ObjectDB::get_instance(*(it.key))));
     }
   }
-
-  // int size = registered_nodes.size();
-  // const HashMap<ObjectID, ObjectID>::Pair* pairs = new HashMap<ObjectID, ObjectID>::Pair[size];
-  // registered_nodes.get_key_value_ptr_array(&pairs);
-  // for(int i = 0; i < size; i++) {
-  //   Ref<VDAspectComposer> composer = Object::cast_to<VDEntityNode>(ObjectDB::get_instance(pairs[i].data))->get_composer();
-  //   if(composer != nullptr && composer->has_aspect(aspect_name)) {
-  //     results.push_back(Object::cast_to<Node>(ObjectDB::get_instance(pairs[i].key)));
-  //   }
-  // }
-  // delete pairs;
   return results;
 }
